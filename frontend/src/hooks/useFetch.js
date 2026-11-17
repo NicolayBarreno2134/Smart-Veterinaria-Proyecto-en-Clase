@@ -1,26 +1,6 @@
 import axios from "axios";
-import  {useState} from "react";
-import {toast} from "react-toastify";
-import {useOnlineStatus} from './useOnlineStatus.js'
-
-function StatusBar() {
-  const isOnline = useOnlineStatus();
-  return <h1>{isOnline ? '✅ Online' : '❌ Disconnected'}</h1>;
-}
-
-function SaveButton() {
-  const isOnline = useOnlineStatus();
-
-  function handleSaveClick() {
-    console.log('✅ Progress saved');
-  }
-
-  return (
-    <button disabled={!isOnline} onClick={handleSaveClick}>
-      {isOnline ? 'Save progress' : 'Reconnecting...'}
-    </button>
-  );
-}
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export function useFetch(){
     //Crear el loading
@@ -35,6 +15,7 @@ export function useFetch(){
             const response = await axios({
                 method,
                 url,
+                timeout: 10000,
                 headers:{
                     "Content-Type":"application/json",
                     ...headers,
@@ -47,8 +28,9 @@ export function useFetch(){
 
         }catch(error){
             toast.dismiss(loadingToast);
-            toast.error(error.response?.data?.msg || "Ocurrio un error al procesar la solicitud");
+            toast.error(error.response?.data?.msg || "No se pudo conectar con el servidor");
             console.error(error)
+            return null
         }
         finally{
             setLoading(false)

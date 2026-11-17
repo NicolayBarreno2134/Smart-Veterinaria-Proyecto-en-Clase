@@ -16,10 +16,10 @@
     "npm": "^11.1.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-hook-form": "^7.54.2",
+    "react-hook-form": "^7.92.0",
     "react-icons": "^5.4.0",
     "react-router": "^7.1.4",
-    "react-toastify": "^11.0.5",
+    "react-toastify": "^11.2.0",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.0.1"
   },

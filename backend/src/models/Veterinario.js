@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
-import bycrypt from 'bcryptjs';
+import bcrypt from 'bcryptjs';
 import { randomBytes } from 'node:crypto';
 
-const { Schema } = mongoose;
+const { Schema,model } = mongoose;
 
 
 const veterinarioSchema = new Schema({
@@ -62,8 +62,8 @@ const veterinarioSchema = new Schema({
 //Metodo para cifrar el password
 veterinarioSchema.methods.encryptPassword = async function(passwordUser)
 {
-const salt = bcrypt.genSaltSync(10);
-const passwordEncryp= bcrypt.hashSync(passwordUser, salt);
+const salt = await bcrypt.genSaltSync(10);
+const passwordEncryp= await bcrypt.hashSync(passwordUser, salt);
 return passwordEncryp
 }
 //Metodo para verificar si el mismo password es el mismo en la base de datos
