@@ -1,202 +1,139 @@
-import { useState } from "react"
-import { MdVisibility, MdVisibilityOff } from "react-icons/md"
-import { Link, useNavigate } from "react-router"
-import { useForm } from "react-hook-form"
-import { ToastContainer } from "react-toastify"
-import { useFetch } from "../hooks/useFetch"
+import { useState } from "react";
+import { Link } from "react-router";
+import { useForm } from "react-hook-form";
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
 
 export const Register = () => {
-    const [showPassword, setShowPassword] = useState(false)
-    const navigate = useNavigate()
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const { fetchDataBackend, loading } = useFetch()
 
-    const registerUser = async (dataForm) => {
-        const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:5000"
-        const result = await fetchDataBackend(`${baseUrl}/api/registro`, dataForm, "POST")
-        if (result) {
-            navigate("/login")
+    const [showPassword, setShowPassword] = useState(false);
+    const { register, handleSubmit, formState: { errors } } = useForm();
+
+
+    const registro = async (data) => {
+        try {
+            const url = "http://localhost:3000/api/registro"
+            const respuesta = await axios.post(url,data)
+            toast.success(respuesta.data.msg)
+        } catch (error) {
+            toast.error(error.response.data.msg)
         }
     }
 
-
     return (
         <div className="flex flex-col sm:flex-row h-screen">
-            <ToastContainer/>
 
+            <ToastContainer />
+
+            {/* Sección de formulario de registro */}
             <div className="w-full sm:w-1/2 h-screen bg-white flex justify-center items-center">
 
-
                 <div className="md:w-4/5 sm:w-full">
+                    {/* Contenedor del formulario */}
 
                     <h1 className="text-3xl font-semibold mb-2 text-center uppercase text-gray-500">Bienvenido(a)</h1>
+                    <small className="text-gray-400 block my-4 text-sm">Por favor ingresa tus datos</small>
 
-                    <small className="text-gray-400 block my-4 text-sm">Por favor ingresa tus datos</small> 
-                    
-                    {/* Formulario */}
-                    <form onSubmit={handleSubmit(registerUser)}>
+                    <form onSubmit={handleSubmit(registro)}>
 
-                        {/* Campo nombre */}
+                        {/* Campo para nombre */}
                         <div className="mb-3">
-                            <label className="mb-1 block text-sm font-semibold">
-                                Nombre <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Ingresa tu nombre"
-                                aria-invalid={errors.nombre ? "true" : "false"}
-                                className={`block w-full rounded-md border py-1 px-1.5 text-gray-500 ${errors.nombre ? "border-red-500" : "border-gray-300"}`}
-                                {...register("nombre", { required: "El nombre es obligatorio" })}
+                            <label className="mb-2 block text-sm font-semibold">Nombre</label>
+                            <input type="text" placeholder="Ingresa tu nombre" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500"
+                            {...register("nombre", { required: "El nombre es obligatorio" })}
                             />
-                            {errors.nombre && <p className="mt-1 text-sm text-red-500">{errors.nombre.message}</p>}
+                            {errors.nombre && <p className="text-red-800">{errors.nombre.message}</p>}
                         </div>
 
-
-                        {/* Campo apellido */}
+                        {/* Campo para apellido */}
                         <div className="mb-3">
-                            <label className="mb-1 block text-sm font-semibold">
-                                Apellido <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Ingresa tu apellido"
-                                aria-invalid={errors.apellido ? "true" : "false"}
-                                className={`block w-full rounded-md border py-1 px-1.5 text-gray-500 ${errors.apellido ? "border-red-500" : "border-gray-300"}`}
-                                {...register("apellido", { required: "El apellido es obligatorio" })}
+                            <label className="mb-2 block text-sm font-semibold">Apellido</label>
+                            <input type="text" placeholder="Ingresa tu apellido" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" 
+                            {...register("apellido", { required: "El apellido es obligatorio" })}
                             />
-                            {errors.apellido && <p className="mt-1 text-sm text-red-500">{errors.apellido.message}</p>}
+                            {errors.apellido && <p className="text-red-800">{errors.apellido.message}</p>}
                         </div>
 
-
-                        {/* Campo dirección */}
+                        {/* Campo para dirección */}
                         <div className="mb-3">
-                            <label className="mb-1 block text-sm font-semibold">
-                                Dirección <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-                            <input
-                                type="text"
-                                placeholder="Ingresa tu dirección de domicilio"
-                                aria-invalid={errors.direccion ? "true" : "false"}
-                                className={`block w-full rounded-md border py-1 px-1.5 text-gray-500 ${errors.direccion ? "border-red-500" : "border-gray-300"}`}
-                                {...register("direccion", { required: "La dirección es obligatoria" })}
+                            <label className="mb-2 block text-sm font-semibold">Dirección</label>
+                            <input type="text" placeholder="Ingresa tu dirección de domicilio" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" 
+                            {...register("direccion", { required: "La direccion es obligatorio" })}
                             />
-                            {errors.direccion && <p className="mt-1 text-sm text-red-500">{errors.direccion.message}</p>}
+                            {errors.direccion && <p className="text-red-800">{errors.direccion.message}</p>}
                         </div>
                         
-
-                        {/* Campo celular */}
+                        {/* Campo para celular */}
                         <div className="mb-3">
-                            <label className="mb-1 block text-sm font-semibold">
-                                Celular <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-                            <input
-                                type="text"
-                                inputMode="tel"
-                                placeholder="Ingresa tu celular"
-                                aria-invalid={errors.celular ? "true" : "false"}
-                                className={`block w-full rounded-md border py-1 px-1.5 text-gray-500 ${errors.celular ? "border-red-500" : "border-gray-300"}`}
-                                {...register("celular", {
-                                    required: "El celular es obligatorio",
-                                    pattern: {
-                                        value: /^\d{7,15}$/,
-                                        message: "Ingresa un celular válido"
-                                    }
-                                })}
+                            <label className="mb-2 block text-sm font-semibold">Celular</label>
+                            <input type="number" placeholder="Ingresa tu celular" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" 
+                            {...register("celular", { required: "El celular es obligatorio" })}
                             />
-                            {errors.celular && <p className="mt-1 text-sm text-red-500">{errors.celular.message}</p>}
+                            {errors.celular && <p className="text-red-800">{errors.celular.message}</p>}
+                        </div>
+                        
+                        {/* Campo para correo electrónico */}
+                        <div className="mb-3">
+                            <label className="mb-2 block text-sm font-semibold">Correo electrónico</label>
+                            <input type="email" placeholder="Ingresa tu correo electrónico" className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500" 
+                            {...register("email", { required: "El correo electrónico es obligatorio" })}
+                            />
+                            {errors.email && <p className="text-red-800">{errors.email.message}</p>}
                         </div>
 
-
-                        {/* Campo correo electrónico */}
-                        <div className="mb-3">
-                            <label className="mb-1 block text-sm font-semibold">
-                                Correo electrónico <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-                            <input
-                                type="email"
-                                placeholder="Ingresa tu correo electrónico"
-                                aria-invalid={errors.email ? "true" : "false"}
-                                className={`block w-full rounded-md border py-1 px-1.5 text-gray-500 ${errors.email ? "border-red-500" : "border-gray-300"}`}
-                                {...register("email", {
-                                    required: "El correo electrónico es obligatorio",
-                                    pattern: {
-                                        value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                        message: "Ingresa un correo electrónico válido"
-                                    }
-                                })}
-                            />
-                            {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>}
-                        </div>
-
-
-
-                        {/* Campo Contraseña */}
-                        <div className="mb-3">
-                            
-                            <label className="block text-sm font-semibold mb-1">
-                                Contraseña <span className="text-red-500">* Campo obligatorio</span>
-                            </label>
-
+                        {/* Campo para contraseña */}
+                        <div className="mb-3 relative">
+                            <label className="mb-2 block text-sm font-semibold">Contraseña</label>
                             <div className="relative">
                                 <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="************"
-                                    aria-invalid={errors.password ? "true" : "false"}
-                                    className={`w-full rounded-md border px-3 py-2 pr-10 ${errors.password ? "border-red-500" : "border-gray-300"}`}
-                                    {...register("password", {
-                                        required: "La contraseña es obligatoria",
-                                        minLength: {
-                                            value: 6,
-                                            message: "La contraseña debe tener al menos 6 caracteres"
-                                        }
-                                    })}
+                                    type={showPassword ? "text" : "password"} // Cambia el tipo del input entre 'text' y 'password' según el estado
+                                    placeholder="********************"
+                                    className="block w-full rounded-md border border-gray-300 focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 py-1 px-1.5 text-gray-500 pr-10"
+                                    {...register("password", { required: "La contraseña es obligatorio" })}
                                 />
-
+                                    {errors.password && <p className="text-red-800">{errors.password.message}</p>}
+                                {/* Botón para mostrar/ocultar la contraseña */}
                                 <button
                                     type="button"
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
-                                    aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                                    onClick={() => setShowPassword(!showPassword)} // Cambia el estado para mostrar/ocultar la contraseña
+                                    className="absolute top-2 right-3 text-gray-500 hover:text-gray-700"
                                 >
-                                    {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
+                                    {/* Icono que cambia según el estado de la contraseña */}
+                                    {showPassword ? (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13.875 18.825A9.956 9.956 0 0112 19c-4.418 0-8.165-2.928-9.53-7a10.005 10.005 0 0119.06 0 9.956 9.956 0 01-1.845 3.35M9.9 14.32a3 3 0 114.2-4.2m.5 3.5l3.8 3.8m-3.8-3.8L5.5 5.5" />
+                                        </svg>
+                                    ) : (
+                                        <svg className="w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-9.95 0a9.96 9.96 0 0119.9 0m-19.9 0a9.96 9.96 0 0119.9 0M3 3l18 18" />
+                                        </svg>
+                                    )}
                                 </button>
                             </div>
-                            {errors.password && <p className="mt-1 text-sm text-red-500">{errors.password.message}</p>}
                         </div>
 
-
-                        {/* Botón Register */}
+                        {/* Botón para enviar el formulario */}
                         <div className="mb-3">
-                            <button
-                                type="submit"
-                                disabled={loading}
-                                className="bg-gray-500 text-slate-300 border py-2 w-full rounded-xl mt-5
-                                hover:scale-105 duration-300 hover:bg-gray-900 hover:text-white disabled:opacity-50"
-                            >
-                                {loading ? "Registrando..." : "Registrarse"}
-                            </button>
+                            <button className="bg-gray-500 text-slate-300 border py-2 w-full rounded-xl mt-5 hover:scale-105 duration-300 hover:bg-gray-900 hover:text-white">Registrarse</button>
                         </div>
-
 
                     </form>
 
+                    {/* Línea separadora */}
+                    <div className="mt-5 text-xs border-b-2 py-4"></div>
 
                     {/* Enlace para iniciar sesión si ya tiene una cuenta */}
                     <div className="mt-3 text-sm flex justify-between items-center">
                         <p>¿Ya posees una cuenta?</p>
-                        <Link to="/login" className="py-2 px-5 bg-gray-500 text-slate-300 border rounded-xl hover:scale-110 
-                        duration-300 hover:bg-gray-900">Iniciar sesión</Link>
+                        <Link to="/login" className="py-2 px-5 bg-gray-500 text-slate-300 border rounded-xl hover:scale-110 duration-300 hover:bg-gray-900">Iniciar sesión</Link>
                     </div>
 
                 </div>
 
             </div>
 
-            {/* Imagen */}
-            <div className="w-full sm:w-1/2 h-1/3 sm:h-screen bg-[url('/public/images/dogregister.jpg')] bg-no-repeat 
-                bg-cover bg-center sm:block hidden">
-            </div>
-
+            {/* Sección con imagen de fondo, solo visible en pantallas grandes */}
+            <div className="w-full sm:w-1/2 h-1/3 sm:h-screen bg-[url('/public/images/dogregister.jpg')] bg-no-repeat bg-cover bg-center sm:block hidden"></div>
         </div>
-    )
-}
+    );
+};
